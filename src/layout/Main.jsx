@@ -12,11 +12,13 @@ class Main extends Component {
   };
 
   componentDidMount() {
-    fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=matrix`)
+    fetch(`https://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=matrix`)
       .then((response) => response.json())
-      .then((data) =>
-        this.setState({ movies: data.Search, loading: false })
-      ); /* обращаемся к Seаrch чтобы получить данные фильма  */
+      .then((data) => this.setState({ movies: data.Search, loading: false }))
+      .catch((err) => {
+        console.log(err);
+        this.setState({ loading: false });
+      }); /* обращаемся к Seаrch чтобы получить данные фильма  */
   } /* выдача списка фильмов при рендеринге страницы */
 
   searchMovies = (str, type = "all") => {
@@ -24,12 +26,16 @@ class Main extends Component {
       loading: true,
     });
     fetch(
-      `http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${str}${
+      `https://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${str}${
         type !== "all" ? `&type=${type}` : ""
       }`
     )
       .then((response) => response.json())
-      .then((data) => this.setState({ movies: data.Search, loading: false }));
+      .then((data) => this.setState({ movies: data.Search, loading: false }))
+      .catch((err) => {
+        console.log(err);
+        this.setState({ loading: false });
+      });
   }; /* Функция по поиску фильмов мы ее опускаем в пропс к saerch и меняет наш state  */
   render() {
     const { movies, loading } = this.state;
